@@ -1,4 +1,10 @@
 # fastdfs-tracker
+基于[ygqygq2/fastdfs-nginx](https://hub.docker.com/r/ygqygq2/fastdfs-nginx/)，修复部分bug，并将其拆分成fastdfs-storage和fastdfs-tracker两个镜像，此篇文章是介绍fastdfs-tracker。
+
+### 特点
+- 为tracker节点整合了nginx，作为各个storage节点中nginx的反向代理；
+- 将nginx的端口号作为环境变量，创建容器时指定。
+
 ### 环境变量
 - TRACKER_SERVER：tracker的ip及port，格式为ip:port，用于设置client.conf中的tracker_server，方便监控和调试（可选）；
 - NGINX_PORT：nginx的端口号，默认为80（可选）；
