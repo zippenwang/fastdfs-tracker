@@ -18,7 +18,7 @@ RUN yum install -y git gcc make wget pcre pcre-devel openssl openssl-devel \
 #create the dirs to store the files downloaded from internet
 RUN mkdir -p ${FASTDFS_PATH}/libfastcommon \
  && mkdir -p ${FASTDFS_PATH}/fastdfs \
- && mkdir -p ${FASTDFS_PATH}/fastdfs-nginx-module \
+ && mkdir -p ${FASTDFS_PATH}/nginx \
  && mkdir ${FASTDFS_BASE_PATH}
 
 #compile the libfastcommon
@@ -38,6 +38,8 @@ RUN git clone --depth 1 https://github.com/happyfish100/fastdfs.git ${FASTDFS_PA
  && rm -rf ${FASTDFS_PATH}/fastdfs
 
 #comile nginx
+WORKDIR ${FASTDFS_PATH}/nginx
+
 # nginx url: https://nginx.org/download/nginx-${NGINX_VERSION}.tar.gz
 # tengine url: http://tengine.taobao.org/download/tengine-${TENGINE_VERSION}.tar.gz
 RUN wget http://tengine.taobao.org/download/tengine-${TENGINE_VERSION}.tar.gz \
@@ -46,7 +48,11 @@ RUN wget http://tengine.taobao.org/download/tengine-${TENGINE_VERSION}.tar.gz \
  && ./configure --prefix=/usr/local/nginx \
  && make \
  && make install \
- && ln -s /usr/local/nginx/sbin/nginx /usr/bin/
+ && ln -s /usr/local/nginx/sbin/nginx /usr/bin/ \
+ && rm -rf ${FASTDFS_PATH}/nginx
+
+# return /root
+WORKDIR /root
 
 EXPOSE 22122 23000 8080 8888 80
 VOLUME ["$FASTDFS_BASE_PATH","/etc/fdfs","/usr/local/nginx/conf/conf.d"]   
